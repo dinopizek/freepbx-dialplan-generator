@@ -1,29 +1,35 @@
 import pandas as pd
 
-# Define the starting values
-max_prepend = 32  # Goes up to 32, with 10 -> 97, 20 -> 98, 30 -> 99
-min_prefix = 540  # Starts from 540
-max_prefix = 592  # Goes up to 592
+# Define the starting and ending prefix values
+min_prefix = 560  # Set this 1 less than the desired starting prefix to align numbering
+max_prefix = 592  # Upper limit of the prefix range
+max_prepend = max_prefix - min_prefix  # Automatically calculates the range
+# max_prepend = 32  # Uncomment to manually set a fixed range
+
+# Match patterns for different numbering formats
 match_patterns = ["00385Z.", "385Z.", "X.", "Z.", "X."]
 
-# Adjust specific prepend values
+# Adjust specific prepend values for better readability and easier configuration.
+# Instead of using numbers like 10, 20, 30, we map them to 97, 98, 99
+# This avoids unnecessary trailing zeros, making it cleaner.
 def adjust_prepend(prepend):
     return {10: 97, 20: 98, 30: 99}.get(prepend, prepend)
 
-# Generate the data
+# Generate the dial plan data
 data = []
 for original_prepend in range(1, max_prepend + 1):
-    prepend = adjust_prepend(original_prepend)
-    prefix = min_prefix + prepend  # Start from 541 and go up to 592
-    base_number = prepend * 100000 + 385  # Base number for match pattern
+    prepend = adjust_prepend(original_prepend)  # Apply special mappings
+    prefix = min_prefix + prepend  # Generate the prefix dynamically
+    base_number = prepend * 100000 + 385  # Construct base number for match pattern variations
 
-    data.append([prepend, prefix, "00385Z.", ""])
-    data.append([prepend * 100, prefix, "385Z.", ""])
-    data.append([base_number, prefix, "X.", ""])
-    data.append([base_number, prefix, "Z.", ""])
-    data.append([base_number, prefix * 10, "X.", ""])
+    # Append different variations for the dial plan
+    data.append([prepend, prefix, "00385Z.", ""])  # Full international format
+    data.append([prepend * 100, prefix, "385Z.", ""])  # National format
+    data.append([base_number, prefix, "X.", ""])  # Custom pattern with base number
+    data.append([base_number, prefix, "Z.", ""])  # Alternative custom pattern
+    data.append([base_number, prefix * 10, "X.", ""])  # Variation with multiplied prefix
 
-# Create DataFrame
+# Create a Pandas DataFrame
 df = pd.DataFrame(data, columns=["prepend", "prefix", "match pattern", "callerid"])
 
 # Save the final CSV file
@@ -32,5 +38,5 @@ df.to_csv(csv_file_path, index=False, header=True)
 
 print(f"CSV file saved: {csv_file_path}")
 
-# Prevent the script from closing immediately
+# Prevent the script from closing immediately (useful for manual execution)
 input("Press Enter to exit...")
