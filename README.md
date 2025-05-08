@@ -1,10 +1,6 @@
 # freepbx-dialplan-generator
 This script generates a structured CSV file containing phone number prefixes and match patterns, useful for telecom configurations such as SIM assignments, call routing, or PBX setups.
 
-![image](https://github.com/user-attachments/assets/9109f7d2-505e-4723-ac6b-b8bad6d73392)
-
-![image](https://github.com/user-attachments/assets/b9945bc3-5495-45f3-96a0-cfa973760485)
-
 ## How It Works
 1. **Define Prefix Range** – Set `min_prefix` and `max_prefix` to specify the range of prefixes (e.g., SIM card allocations).
 2. **Adjust Prepend Values** – Custom mappings (e.g., `10 → 97`) simplify number formatting.
